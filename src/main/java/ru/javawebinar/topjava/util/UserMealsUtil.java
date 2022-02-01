@@ -29,19 +29,17 @@ public class UserMealsUtil {
     }
 
     private static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        Map<LocalDate, Integer> caloriesPerDate = new HashMap<>();
+        Map<LocalDate, Integer> caloriesPerDates = new HashMap<>();
         for (UserMeal meal : meals) {
-            caloriesPerDate.put(meal.getDateTime().toLocalDate(), caloriesPerDate.getOrDefault(meal.getDateTime().toLocalDate(), 0) + meal.getCalories());
+            caloriesPerDates.put(meal.getDateTime().toLocalDate(),
+                    caloriesPerDates.getOrDefault(meal.getDateTime().toLocalDate(), 0) + meal.getCalories());
         }
 
         List<UserMealWithExcess> result = new ArrayList<>();
         for (UserMeal meal : meals) {
             if (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
-                result.add(new UserMealWithExcess(
-                        meal.getDateTime(),
-                        meal.getDescription(),
-                        meal.getCalories(),
-                        caloriesPerDate.get(meal.getDateTime().toLocalDate()) > caloriesPerDay)
+                result.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(),
+                        meal.getCalories(), caloriesPerDates.get(meal.getDateTime().toLocalDate()) > caloriesPerDay)
                 );
             }
         }
@@ -56,7 +54,8 @@ public class UserMealsUtil {
         return meals
                 .stream()
                 .filter(m -> TimeUtil.isBetweenHalfOpen(m.getDateTime().toLocalTime(), startTime, endTime))
-                .map(m -> new UserMealWithExcess(m.getDateTime(), m.getDescription(), m.getCalories(), caloriesPerDate.get(m.getDateTime().toLocalDate()) > caloriesPerDay))
+                .map(m -> new UserMealWithExcess(m.getDateTime(), m.getDescription(), m.getCalories(),
+                        caloriesPerDate.get(m.getDateTime().toLocalDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
     }
 }
