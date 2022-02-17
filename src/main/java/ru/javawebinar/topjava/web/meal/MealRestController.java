@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 
-import java.util.Collection;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -23,20 +22,20 @@ public class MealRestController {
     @Autowired
     private MealService service;
 
-    public Collection<MealTo> getAll() {
+    public List<MealTo> getAll() {
         log.info("getAll");
         return service.getAll(authUserId(), authUserCaloriesPerDay());
     }
 
-    public MealTo get(int id) {
+    public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id, authUserId(), authUserCaloriesPerDay());
+        return service.get(id, authUserId());
     }
 
-    public MealTo create(Meal meal) {
+    public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
-        return service.create(meal, authUserId(), authUserCaloriesPerDay());
+        return service.create(meal, authUserId());
     }
 
     public void delete(int id) {
