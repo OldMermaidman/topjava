@@ -82,7 +82,8 @@ public class MealServiceTest {
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
+        Meal newer = service.get(MEAL1_ID, USER_ID);
+        MEAL_MATCHER.assertMatch(newer, getUpdated());
     }
 
     @Test
